@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>alicia's blog</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400..700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="assets/globe_icon_pink_1024.png" sizes="any">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html">
+  <img class="brand-logo" src="assets/acs-logo.png" alt="" onerror="this.style.display='none'">
+</a>
+    <div class="header-right">
+      <nav class="primary-nav">
+        <a href="about.html">about</a>
+        <a href="essays.html">blog posts</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero container">
+
+    <!-- Left: big name + vertical social rail + accent mark -->
+    <div class="hero-left">
+      <h1 class="hero-name split-text">hi! i'm alicia!</h1>
+      <div class="social-rail">
+        <a href="https://x.com/aliciachimeno" target="_blank" rel="noopener">x</a>
+        <a href="https://www.linkedin.com/in/alicia-chimeno-sarabia/" target="_blank" rel="noopener">linkedin</a>
+        <a href="https://github.com/aliciachimeno" target="_blank" rel="noopener">github</a>
+
+      </div>
+      <div class="accent-mark">✦</div>
+    </div>
+
+    <!-- Middle: intro line + 2x2 job/facts grid + photo -->
+    <div class="hero-center">
+      <p class="intro-line fade-loop">i'm a 25 y/o software dev...</p>
+      <div class="fact-grid">
+        <div class="fact-item">
+          <div class="fact-label"><span class="n">[01]</span> AI/ML Research Engineer</div>
+          <div class="fact-row">
+  <span class="dot" style="display:none;"></span>
+  <a href="https://www.bsc.es/" target="_blank" rel="noopener">
+    <img class="icon" src="assets/bsc.png" alt="BSC" onerror="this.style.display='none'; this.parentElement.previousElementSibling.style.display='inline-block';">
+  </a>
+  Barcelona Supercomputing Center
+</div>
+        </div>
+        <div class="fact-item">
+          <div class="fact-label"><span class="n">[02]</span>Mathematics and Data Science graduate</div>
+          <div class="fact-row"><span class="dot"></span>[detail or stat about this role]</div>
+        </div>
+        
+      </div>
+
+      <div class="hero-photo">
+  <img src="assets/pic.jpeg" alt="Alicia" onerror="this.style.display='none'; this.parentElement.textContent='[ your photo here ]'">
+</div>
+<p class="scroll-reveal">
+trying to stay up to date with <span class="blink-word">AI</span> and share my thoughts. unintentionally deviating into other topics, trying to write medium posts but ending up w/ susbtack posts :) 
+</p>
+    </div>
+
+    <!-- Right: stacked CTAs + location -->
+    <div class="hero-right">
+      <a class="pill pill-dark" href="essays.html">my blog →</a>
+      <a class="pill pill-light" href="about.html">☆ about me</a>
+      <div class="location-tag">𖡡 bcn</div>
+    </div>
+
+  </section>
+</main>
+<footer class="site-footer-dark">
+  <div class="container footer-top-bar">
+    <a href="mailto:tu@email.com">aliciachimeno9@mail.com</a>
+    <span>© <span class="footer-year"></span></span>
+  </div>
+
+  <div class="container footer-main">
+    <div class="footer-cta">
+      <p class="footer-tagline">alicia xxx</p>
+    </div>
+    <div class="footer-columns">
+      <div class="footer-col-dark">
+        <h4>Social</h4>
+<a href="https://www.linkedin.com/in/alicia-chimeno-sarabia" target="_blank" rel="noopener">linkedin</a>
+        <a href="https://x.com/aliciachimeno">x</a>
+      </div>
+      <div class="footer-col-dark">
+        <h4>Sections</h4>
+        <a href="about.html">about me</a>
+        <a href="essays.html">essays</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer-bottom-dark">
+    <span>© <span class="footer-year"></span> Alícia Chimeno | Barcelona</span>
+  </div>
+</footer>
+
+<script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>alicia's blog - inside</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="assets/globe_icon_pink_1024.png" sizes="any">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html">
+  <img class="brand-logo" src="assets/acs-logo.png" alt="" onerror="this.style.display='none'">
+</a>
+    <div class="header-right">
+      <nav class="primary-nav">
+        <a href="about.html">about</a>
+        <a href="essays.html" aria-current="page">blog posts</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page-section container essay-page">
+
+    <a href="essays.html" class="back-link">&larr; back to blog</a>
+
+    <div class="essay-header">
+      <div class="post-date">[Month Day, Year]</div>
+      <h1>[Essay Title]</h1>
+    </div>
+
+    <!-- Escribe tu ensayo aquí: un <p> por párrafo -->
+    <article class="essay-content">
+      <p>[First paragraph of the essay.]</p>
+      <p>[Second paragraph of the essay.]</p>
+      <p>[Third paragraph of the essay.]</p>
+    </article>
+
+  </section>
+</main>
+
+<footer class="site-footer-dark">
+  <div class="container footer-top-bar">
+    <a href="mailto:tu@email.com">aliciachimeno9@mail.com</a>
+    <span>© <span class="footer-year"></span></span>
+  </div>
+
+  <div class="container footer-main">
+    <div class="footer-cta">
+      <p class="footer-tagline">alicia xxx</p>
+    </div>
+    <div class="footer-columns">
+      <div class="footer-col-dark">
+        <h4>Social</h4>
+<a href="https://www.linkedin.com/in/alicia-chimeno-sarabia" target="_blank" rel="noopener">linkedin</a>
+        <a href="https://x.com/aliciachimeno">x</a>
+      </div>
+      <div class="footer-col-dark">
+        <h4>Sections</h4>
+        <a href="about.html">about me</a>
+        <a href="essays.html">essays</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer-bottom-dark">
+    <span>© <span class="footer-year"></span> Alícia Chimeno | Barcelona</span>
+  </div>
+</footer>
+
+<script>document.querySelectorAll(".footer-year").forEach(el => el.textContent = new Date().getFullYear());</script>
+<script src="script.js"></script>
+</body>
+</html>
