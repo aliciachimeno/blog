@@ -521,12 +521,15 @@ a {
 }
 /* ---------- Responsive ---------- */
 
+
 @media (max-width: 960px) {
   .hero { grid-template-columns: 1fr; }
   .hero-left { min-height: unset; gap: 32px; }
   .hero-right { align-items: flex-start; }
   .fact-grid { grid-template-columns: 1fr; gap: 28px; }
   .two-col { grid-template-columns: 1fr; }
+  .about-hero { grid-template-columns: 1fr; }
+  .about-photo-stack { width: 160px; }
   .primary-nav { display: none; }
   .nav-toggle { display: block; }
 }
@@ -587,3 +590,51 @@ a {
   50% { opacity: 1; }
 }
 
+/* ---------- About page: cycling photo stack ---------- */
+
+.about-hero {
+  grid-template-columns: 200px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+
+.about-photo-stack {
+  position: relative;
+  width: 200px;
+  aspect-ratio: 3 / 4;
+}
+
+.about-photo-stack .stack-photo {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  padding: 6px 6px 20px 6px;
+  box-sizing: border-box;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+  opacity: 0;
+  transform: scale(0.97);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.about-photo-stack .stack-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* scattered resting angles for the photos underneath */
+.about-photo-stack .stack-photo:nth-child(1) { transform: rotate(-4deg) scale(0.97); }
+.about-photo-stack .stack-photo:nth-child(2) { transform: rotate(3deg) scale(0.97); }
+.about-photo-stack .stack-photo:nth-child(3) { transform: rotate(-2deg) scale(0.97); }
+.about-photo-stack .stack-photo:nth-child(4) { transform: rotate(5deg) scale(0.97); }
+
+.about-photo-stack .stack-photo.is-active {
+  opacity: 1;
+  z-index: 2;
+}
+.about-photo-stack .stack-photo:nth-child(1).is-active { transform: rotate(-2deg) scale(1); }
+.about-photo-stack .stack-photo:nth-child(2).is-active { transform: rotate(2deg) scale(1); }
+.about-photo-stack .stack-photo:nth-child(3).is-active { transform: rotate(-1deg) scale(1); }
+.about-photo-stack .stack-photo:nth-child(4).is-active { transform: rotate(3deg) scale(1); }

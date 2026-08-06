@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initScrollReveal();
   initSkyBackground();
   initFadeLoop();
+  initPhotoStack();
 });
 
 /* ----------------------------------------------------------------------
@@ -180,4 +181,20 @@ function initFadeLoop() {
       }
     });
   });
+}
+
+function initPhotoStack() {
+  const stack = document.querySelector(".about-photo-stack");
+  if (!stack) return;
+  const photos = stack.querySelectorAll(".stack-photo");
+  if (!photos.length) return;
+
+  let current = 0;
+  photos[current].classList.add("is-active");
+
+  setInterval(() => {
+    photos[current].classList.remove("is-active");
+    current = (current + 1) % photos.length;
+    photos[current].classList.add("is-active");
+  }, 3500);
 }
