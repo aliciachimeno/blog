@@ -18,7 +18,7 @@
 
   --max-width: 1200px;
   --gutter: 24px;
-  --header-height: 76px;
+  --header-height: 52px;
 }
 
 * { box-sizing: border-box; }
@@ -87,11 +87,11 @@ a {
 .brand {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   letter-spacing: 0.02em;
 }
 .brand-logo {
-  height: 60px;
+  height: 50px;
   width: auto;
   display: block;
 }
@@ -99,17 +99,17 @@ a {
 .header-right {
   display: flex;
   align-items: center;
-  gap: 32px;
+  gap: 24px;
 }
 
 .primary-nav {
   display: flex;
   align-items: center;
-  gap: 28px;
+  gap: 22px;
 }
 
 .primary-nav a {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: var(--color-text);
   opacity: 0.75;
   transition: opacity 0.15s ease;
@@ -382,6 +382,33 @@ a {
   margin-bottom: 0;
   max-width: 65ch;
 }
+/* ---------- Essay detail page: narrow reading column, whitespace on both sides ---------- */
+
+.essay-page {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.essay-page .back-link {
+  display: inline-block;
+  margin-bottom: 24px;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.essay-page .back-link:hover { color: var(--color-text); }
+
+.essay-header { margin-bottom: 32px; }
+
+.essay-header .post-date {
+  margin-bottom: 10px;
+}
+
+.essay-content p {
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
 /* ---------- Footer (dark) ---------- */
 
 .site-footer-dark {
@@ -644,5 +671,3 @@ a {
   .about-hero { grid-template-columns: 1fr; }
   .about-photo-stack { width: 160px; }
 }
-
-
