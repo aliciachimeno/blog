@@ -593,7 +593,7 @@ a {
 /* ---------- About page: cycling photo stack ---------- */
 
 .about-hero {
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 1fr 200px;
   gap: 32px;
   align-items: start;
 }
@@ -638,3 +638,11 @@ a {
 .about-photo-stack .stack-photo:nth-child(2).is-active { transform: rotate(2deg) scale(1); }
 .about-photo-stack .stack-photo:nth-child(3).is-active { transform: rotate(-1deg) scale(1); }
 .about-photo-stack .stack-photo:nth-child(4).is-active { transform: rotate(3deg) scale(1); }
+
+
+@media (max-width: 960px) {
+  .about-hero { grid-template-columns: 1fr; }
+  .about-photo-stack { width: 160px; }
+}
+
+
