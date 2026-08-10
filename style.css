@@ -716,6 +716,55 @@ a {
   filter: grayscale(1);
 }
 
+/* Sticker-style photo (transparent cutout, full color, no crop) with
+   playful hover pop-ups. Swap the image at assets/sticker.png and the
+   .pop text below to change the copy. */
+.blog-intro-photo.sticker-frame {
+  position: relative;
+  width: 176px;
+  aspect-ratio: 0.9;
+  background: transparent;
+  overflow: visible;
+}
+
+.blog-intro-photo.sticker-frame img {
+  object-fit: contain;
+  filter: none;
+}
+
+.sticker-frame .pop {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 11px;
+  border-radius: 999px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  font-size: 0.72rem;
+  white-space: nowrap;
+  color: var(--color-text);
+  opacity: 0;
+  transform: translateY(6px) scale(0.85) rotate(var(--rot, 0deg));
+  transition: opacity 0.22s ease, transform 0.22s ease;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.sticker-frame:hover .pop {
+  opacity: 1;
+  transform: translateY(0) scale(1) rotate(var(--rot, 0deg));
+}
+
+.pop-1 { top: -8px;  left: -22px;  --rot: -6deg; transition-delay: 0s; }
+.pop-2 { top: 24%;   right: -46px; --rot: 4deg;  transition-delay: 0.06s; }
+.pop-3 { bottom: 20%; left: -34px; --rot: -4deg; transition-delay: 0.12s; }
+.pop-4 { bottom: -10px; right: -18px; --rot: 5deg; transition-delay: 0.18s; }
+
+@media (max-width: 640px) {
+  .sticker-frame .pop { display: none; }
+}
+
 .blog-intro-box {
   flex: 1;
   border: 1px solid var(--color-border);
@@ -732,6 +781,19 @@ a {
   font-size: 1rem;
   line-height: 1.7;
   color: var(--color-text);
+}
+
+.blog-word {
+  display: inline-block;
+  font-family: "Fraunces", "Georgia", serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 1.55em;
+  line-height: 1;
+  color: #ef5c9c;
+  letter-spacing: 0.01em;
+  transform: rotate(-3deg);
+  padding: 0 2px;
 }
 
 .intro-pill {
@@ -751,6 +813,7 @@ a {
 @media (max-width: 640px) {
   .blog-intro { flex-direction: column; }
   .blog-intro-photo { width: 96px; }
+  .blog-intro-photo.sticker-frame { width: 128px; }
 }
 
 /* ---------- Essays / posts list — compact, year-grouped archive ---------- */
