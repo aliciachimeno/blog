@@ -193,12 +193,8 @@ function initFadeLoop() {
    of phrases works.
    ---------------------------------------------------------------------- */
 const STICKER_PHRASES = [
-  "✨",
-  "trying to find purpose...",
-  "ai makes us lose of essence!",
-  "messy authenticity over perfection",
-  "passion wins hard work",
-  "embarrassment is an under-explored emotion"
+  "I'm all bark, never would bite",
+  "Embarrassment is an under-explored emotion"
 ];
 
 function initStickerPop() {

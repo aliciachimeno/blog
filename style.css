@@ -886,81 +886,151 @@ a {
 }
 
 /* ---------- Secret password gate (essays page) ----------
-   Small easter-egg box at the bottom of essays.html. Purely a client-side
-   check (script.js) — fun for friends who know the answer, not real
-   security. Correct guess redirects to personal.html. */
+   Small easter-egg box at the bottom of essays.html, styled like an old
+   Mac OS system password dialog: striped titlebar, flat black hairline
+   border, solid (non-blurred) drop shadow, monospace system font.
+   Purely a client-side check (script.js) — fun for friends who know the
+   answer, not real security. Correct guess redirects to personal.html. */
 
 .secret-gate {
   margin-top: 56px;
   padding-top: 40px;
   border-top: 1px solid var(--color-border);
-  max-width: 420px;
+  max-width: 480px;
 }
 
 .secret-hint {
   font-size: 0.95rem;
-  margin-bottom: 4px;
+  margin-bottom: 20px;
 }
 
-.secret-clue {
-  font-size: 0.85rem;
+.secret-clue-inline {
   color: var(--color-muted);
-  margin-bottom: 18px;
+  font-size: 0.85rem;
 }
 
-.secret-input-row {
+/* ---- the little retro rectangle itself ----
+   Flat, square-cornered, no pills — a hairline black rectangle with a
+   striped titlebar, sitting flush with a hard (non-blurred) shadow, the
+   way an old Mac OS window/alert box looked. */
+
+.mac-dialog {
+  width: 148px;
+  max-width: 100%;
+  background: #ffffff;
+  border: 1px solid #000;
+  border-radius: 0;
+  box-shadow: 2px 2px 0 #000;
+  font-family: "Monaco", "Consolas", "Courier New", monospace;
+}
+
+.mac-titlebar {
+  position: relative;
+  height: 13px;
   display: flex;
-  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    #000 0px, #000 1px,
+    #fff 1px, #fff 3px
+  );
+  border-bottom: 1px solid #000;
 }
 
-.secret-input {
+.mac-titlebar-dot {
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border: 1px solid #000;
+  z-index: 1;
+}
+
+.mac-titlebar-text {
+  background: #fff;
+  padding: 0 5px;
+  font-size: 0.56rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  color: #000;
+  z-index: 1;
+}
+
+.mac-dialog-body {
+  display: flex;
+  gap: 5px;
+  padding: 7px;
+  background: #fff;
+}
+
+.mac-input {
   flex: 1;
   min-width: 0;
-  padding: 12px 16px;
-  border-radius: 999px;
-  border: 1px solid var(--color-border);
-  background: var(--color-soft);
-  font-family: var(--font-body);
-  font-size: 0.92rem;
-  color: var(--color-text);
+  box-sizing: border-box;
+  padding: 3px 5px;
+  border: 1px solid #000;
+  border-radius: 0;
+  background: #fff;
+  font-family: inherit;
+  font-size: 0.64rem;
+  color: #000;
   outline: none;
-  transition: border-color 0.15s ease;
+  box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.18);
 }
 
-.secret-input:focus {
-  border-color: var(--color-accent);
+.mac-input:focus {
+  box-shadow: inset 1px 1px 0 rgba(0, 0, 0, 0.18), 0 0 0 2px rgba(0, 0, 0, 0.12);
 }
 
-.secret-input-row .pill {
+.mac-button {
   flex-shrink: 0;
-  padding: 12px 22px;
-  font-size: 0.9rem;
+  font-family: inherit;
+  font-size: 0.6rem;
+  padding: 3px 8px;
+  background: #fff;
+  color: #000;
+  border: 1px solid #000;
+  border-radius: 0;
   cursor: pointer;
 }
 
+.mac-button:hover {
+  background: #f2f2f2;
+}
+
+.mac-button:active {
+  background: #000;
+  color: #fff;
+}
+
+.mac-button-default {
+  border-width: 2px;
+  font-weight: 700;
+}
+
 .secret-feedback {
-  margin: 12px 0 0 0;
-  font-size: 0.85rem;
+  margin: 8px 0 0 0;
+  font-family: "Monaco", "Consolas", "Courier New", monospace;
+  font-size: 0.68rem;
   color: var(--color-muted);
   min-height: 1.2em;
+  max-width: 240px;
 }
 
 .secret-feedback.is-correct {
   color: #1a8f4c;
 }
 
-.secret-input.is-shake {
+.mac-input.is-shake {
   animation: secretShake 0.35s ease;
-  border-color: #e0577a;
 }
 
 @keyframes secretShake {
   0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
-}
-
-@media (max-width: 480px) {
-  .secret-input-row { flex-direction: column; }
-  .secret-input-row .pill { width: 100%; justify-content: center; }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }
