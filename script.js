@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initSkyBackground();
   initFadeLoop();
   initPhotoStack();
+  initStickerPop();
 });
 
 /* ----------------------------------------------------------------------
@@ -181,6 +182,43 @@ function initFadeLoop() {
       }
     });
   });
+}
+
+/* ----------------------------------------------------------------------
+   Sticker hover pop-up
+   Shows ONE speech-bubble in the top-right corner of the sticker photo.
+   Each time the mouse enters, a random phrase from STICKER_PHRASES is
+   picked. Edit the list below to change what can show up — any number
+   of phrases works.
+   ---------------------------------------------------------------------- */
+const STICKER_PHRASES = [
+  "✨",
+  "trying to find purpose...",
+  "ai makes us lose of essence!",
+  "messy authenticity over perfection",
+  "passion wins hard work",
+  "embarrassment is an under-explored emotion"
+];
+
+function initStickerPop() {
+  const frame = document.querySelector(".sticker-frame");
+  const pop = document.querySelector(".sticker-frame .pop");
+  if (!frame || !pop || !STICKER_PHRASES.length) return;
+
+  let lastIndex = -1;
+
+  function showRandomPhrase() {
+    let index = Math.floor(Math.random() * STICKER_PHRASES.length);
+    // avoid showing the exact same phrase twice in a row when possible
+    if (STICKER_PHRASES.length > 1 && index === lastIndex) {
+      index = (index + 1) % STICKER_PHRASES.length;
+    }
+    lastIndex = index;
+    pop.textContent = STICKER_PHRASES[index];
+  }
+
+  showRandomPhrase();
+  frame.addEventListener("mouseenter", showRandomPhrase);
 }
 
 function initPhotoStack() {
