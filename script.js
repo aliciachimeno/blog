@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initFadeLoop();
   initPhotoStack();
   initStickerPop();
+  initSecretGate();
 });
 
 /* ----------------------------------------------------------------------
@@ -235,4 +236,45 @@ function initPhotoStack() {
     current = (current + 1) % photos.length;
     photos[current].classList.add("is-active");
   }, 3500);
+}
+
+/* ----------------------------------------------------------------------
+   Secret password gate (essays.html)
+   Small easter-egg box — guess the password, get redirected to
+   personal.html. This is all client-side, so it's a fun gate for people
+   who know the answer, not real security (edit SECRET_PASSWORD below to
+   change it).
+   ---------------------------------------------------------------------- */
+const SECRET_PASSWORD = "tate mcrae";
+const SECRET_DESTINATION = "personal.html";
+
+function initSecretGate() {
+  const input = document.getElementById("secret-password");
+  const button = document.getElementById("secret-submit");
+  const feedback = document.getElementById("secret-feedback");
+  if (!input || !button || !feedback) return;
+
+  function tryUnlock() {
+    const guess = input.value.trim().toLowerCase();
+    if (guess === SECRET_PASSWORD) {
+      feedback.textContent = "yes!! taking you there...";
+      feedback.classList.add("is-correct");
+      input.disabled = true;
+      button.disabled = true;
+      setTimeout(() => {
+        window.location.href = SECRET_DESTINATION;
+      }, 500);
+    } else {
+      feedback.textContent = "nope, try again";
+      feedback.classList.remove("is-correct");
+      input.classList.remove("is-shake");
+      void input.offsetWidth; // restart the shake animation on repeat guesses
+      input.classList.add("is-shake");
+    }
+  }
+
+  button.addEventListener("click", tryUnlock);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") tryUnlock();
+  });
 }
