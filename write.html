@@ -326,8 +326,8 @@ async function ghText(repo, file, ref){
 }
 async function remoteLoad(){
   const r=await gh(CFG.notes, "/contents/"+NOTES_FILE);
-  if (r.status===404) return null;
-  if (!r.ok){ const e=new Error("GitHub "+r.status); e.status=r.status; throw e; }
+  if (r.status===404 || r.status===409) return null; // missing file, or empty repo
+  if (!r.ok){ const e=new Error("GitHub "+r.status); e.status=r.status; try{ e.detail=(await r.json()).message; }catch{} throw e; }
   const j=await r.json(); let c=j.content;
   if (!c){ c=(await ghJSON(CFG.notes, "/git/blobs/"+j.sha)).content; }
   return { vault:JSON.parse(fromB64Utf8(c)), sha:j.sha };
@@ -399,12 +399,16 @@ async function connect(){
 async function openVault(){
   let rem=null, offline=false;
   try{ rem=await remoteLoad(); }
-  catch(ex){ if (ex.status===401){ gate("connect","connection","","Your token stopped working. Paste a new one."); return; } offline=true; }
+  catch(ex){
+    if (ex.status===401){ gate("connect","connection","","Your token stopped working. Paste a new one."); return; }
+    if (ex.status){ gate("connect","connection","", "GitHub said "+ex.status+(ex.detail?" (“"+ex.detail+"”)":"")+" when opening "+CFG.notes+". Check the token has Contents: read and write on that repo."); return; }
+    offline=true;
+  }
   const cache=load(CACHE_KEY);
   const v = rem ? rem.vault : (cache && cache.vault);
   S.remote=rem; S.pending=v;
   if (!v){
-    if (offline) gate(null,"studio","Can't reach GitHub right now. Check your connection and reload.");
+    if (offline) gate("connect","studio","","Can't reach GitHub from this browser. Check your connection, or turn off any blocker that stops api.github.com, then press connect.");
     else gate("setup","new notebook","Choose a password. Notes and drafts are encrypted with it before they leave this device, so even someone with access to the repo can't read them. If you forget it, they can't be recovered.");
     return;
   }
