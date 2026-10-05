@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>alicia's blog - studio</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@1,9..144,600&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="assets/globe_icon_pink_1024.png" sizes="any">
+<style>
+/* Studio: three panes (library · list · sheet) under the site header; one pane at a time on the phone. */
+:root{
+  --st-paper:#ffffff; --st-side:#f6f6f6; --st-line:#e6e6e6; --st-ink:#111111; --st-muted:#6b6b6b;
+  --st-sel:#111111; --st-sel-ink:#ffffff; --st-pink:#ff5fa2; --st-danger:#c62828;
+  --st-write:"Literata", Georgia, "Times New Roman", serif;
+  --st-display:"Fraunces", Georgia, serif;
+}
+html,body{height:100%}
+body.studio{background:var(--st-paper);overflow:hidden;display:flex;flex-direction:column}
+body.studio main{flex:1;min-height:0}
+.st-hidden{display:none!important}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:none;border:0;padding:0}
+:focus-visible{outline:2px solid var(--st-pink);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+/* gate */
+.st-gate{height:100%;overflow:auto;display:grid;place-items:center;padding:32px 16px}
+.st-card{width:min(440px,100%);display:grid;gap:16px}
+.st-card h1{font:italic 600 34px/1.1 var(--st-display);margin:0}
+.st-card p{margin:0;color:var(--st-muted);line-height:1.5}
+.st-card form{display:grid;gap:10px}
+.st-field{width:100%;padding:12px 14px;border:1px solid var(--st-line);border-radius:12px;background:#fff}
+.st-field:focus{outline:none;border-color:var(--st-ink)}
+.st-small{font-size:13px;color:var(--st-muted)}
+.st-small a{text-decoration:underline}
+.st-err{color:var(--st-danger);font-size:14px;min-height:1.2em}
+.st-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+/* app */
+.st-app{height:100%;display:grid;grid-template-columns:210px 320px minmax(0,1fr)}
+.st-pane{min-width:0;min-height:0;display:flex;flex-direction:column}
+.st-side{background:var(--st-side);border-right:1px solid var(--st-line)}
+.st-list{border-right:1px solid var(--st-line)}
+.st-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--st-muted);padding:16px 18px 6px;display:flex;justify-content:space-between;align-items:center}
+.st-label button{font-size:18px;line-height:1;color:var(--st-ink);width:24px;height:24px;border-radius:6px}
+.st-label button:hover{background:#eaeaea}
+.st-nav{list-style:none;margin:0;padding:0 8px;display:grid;gap:1px}
+.st-navbtn{display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:7px 10px;border-radius:8px;font-size:14px}
+.st-navbtn:hover{background:#ececec}
+.st-navbtn[aria-current="true"]{background:var(--st-sel);color:var(--st-sel-ink)}
+.st-navbtn .lbl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.st-navbtn .n{font-size:12px;opacity:.6;font-variant-numeric:tabular-nums}
+.st-navbtn .dot{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.35;flex:none}
+.st-newtopic{padding:4px 8px}
+.st-newtopic input{width:100%;padding:7px 10px;border:1px solid var(--st-ink);border-radius:8px}
+.st-scroll{overflow:auto;min-height:0}
+.st-foot{margin-top:auto;border-top:1px solid var(--st-line);padding:12px 16px;display:grid;gap:6px;font-size:12px;color:var(--st-muted)}
+.st-foot .st-row button{font-size:12px;text-decoration:underline}
+
+.st-listhead{padding:14px;display:grid;gap:10px;border-bottom:1px solid var(--st-line)}
+.st-titlebar{display:flex;align-items:baseline;gap:8px}
+.st-titlebar h2{font:italic 600 24px/1.15 var(--st-display);margin:0;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.st-titlebar .count{font-size:12px;color:var(--st-muted);font-variant-numeric:tabular-nums}
+.st-input{width:100%;padding:8px 12px;border:1px solid var(--st-line);border-radius:999px;background:#fff;font-size:14px}
+.st-input:focus{outline:none;border-color:var(--st-ink)}
+.st-quick{border-color:#cfcfcf;background:var(--st-side)}
+.st-actions{display:flex;gap:6px;flex-wrap:wrap}
+.st-chip{padding:6px 12px;border-radius:999px;background:var(--st-side);font-size:13px}
+.st-chip:hover{background:#e8e8e8}
+.st-topictools{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--st-muted)}
+.st-topictools input{flex:1;min-width:0;padding:6px 10px;border:1px solid var(--st-ink);border-radius:8px}
+.st-link{font-size:13px;text-decoration:underline}
+.st-link.danger{color:var(--st-danger)}
+
+.st-notes{list-style:none;margin:0;padding:4px 8px 24px;overflow:auto;flex:1}
+.st-group{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--st-muted);padding:12px 10px 4px}
+.st-item{display:grid;gap:3px;width:100%;text-align:left;padding:10px 12px;border-radius:10px}
+.st-item + .st-item{margin-top:1px}
+.st-item:hover{background:var(--st-side)}
+.st-item[aria-current="true"]{background:var(--st-sel);color:var(--st-sel-ink)}
+.st-item .t{font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.st-item .q{font:italic 15px/1.35 var(--st-write);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.st-item .sub{display:flex;gap:8px;font-size:12px;color:var(--st-muted);min-width:0;align-items:center}
+.st-item[aria-current="true"] .sub{color:inherit;opacity:.75}
+.st-item .sub .p{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.st-item .when{flex:none;font-variant-numeric:tabular-nums}
+.st-tag{flex:none;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:1px 6px;border-radius:999px;border:1px solid currentColor}
+.st-tag.live{color:var(--st-pink);border-color:var(--st-pink)}
+.st-empty{padding:32px 16px;text-align:center;color:var(--st-muted);font-size:14px}
+
+.st-bar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--st-line);flex-wrap:wrap}
+.st-bar select{padding:6px 10px;border-radius:999px;border:1px solid var(--st-line);background:#fff;font-size:13px;max-width:160px}
+.st-bar .grow{flex:1}
+.st-icon{width:34px;height:34px;border-radius:8px;display:inline-grid;place-items:center}
+.st-icon:hover{background:var(--st-side)}
+.st-icon svg{width:18px;height:18px}
+.st-icon.on{color:var(--st-pink)}
+.st-confirm{display:flex;gap:8px;align-items:center;font-size:13px;flex-wrap:wrap}
+.st-sheet{flex:1;overflow:auto;min-height:0}
+.st-page{max-width:68ch;margin:0 auto;padding:28px 24px 96px;display:grid;gap:14px}
+.st-meta{font-size:12px;color:var(--st-muted);text-align:center;font-variant-numeric:tabular-nums}
+.st-page input,.st-page textarea{width:100%;border:0;background:transparent;resize:none;outline:none;padding:0}
+#f-title{font:italic 600 32px/1.15 var(--st-display)}
+#f-quote{font:italic 24px/1.45 var(--st-write);border-left:3px solid var(--st-pink);padding-left:18px;overflow:hidden}
+#f-source{font-size:15px;color:var(--st-muted);padding-left:21px}
+#f-body{font:17px/1.75 var(--st-write);min-height:55vh;overflow:hidden}
+.st-page ::placeholder{color:#b5b5b5}
+.st-hint{font-size:12px;color:var(--st-muted);border-top:1px solid var(--st-line);padding-top:10px}
+.st-preview{display:grid;gap:8px}
+.st-preview .essay-header h1{margin:0}
+.st-blank{flex:1;display:grid;place-items:center;text-align:center;color:var(--st-muted);padding:24px}
+.st-blank strong{display:block;font:italic 600 26px var(--st-display);color:var(--st-ink);margin-bottom:6px}
+.st-toast{font-size:13px;padding:10px 14px;background:#fff0f6;border-bottom:1px solid #ffd1e5;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.st-toast a{text-decoration:underline;font-weight:600}
+
+/* the publish button */
+.st-publish{position:relative;padding:8px 16px;border-radius:999px;background:var(--st-ink);color:#fff;font-size:13px;font-weight:600;overflow:hidden}
+.st-publish:hover{background:#000}
+.st-publish:disabled{opacity:.55;cursor:progress}
+.st-back{display:none}
+
+@media (max-width:820px){
+  .st-app{grid-template-columns:1fr}
+  .st-pane{display:none}
+  body.v-side .st-side, body.v-list .st-list, body.v-sheet .st-sheetpane{display:flex}
+  .st-side,.st-list{border-right:0}
+  .st-back{display:inline-grid}
+  .st-page{padding:20px 16px 96px}
+  #f-title{font-size:26px}
+}
+@media (prefers-reduced-motion:no-preference){.st-item,.st-navbtn{transition:background .12s}}
+</style>
+</head>
+<body class="studio v-list">
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="index.html"><img class="brand-logo" src="assets/acs-logo.png" alt="" onerror="this.style.display='none'"></a>
+    <div class="header-right">
+      <nav class="primary-nav">
+        <a href="about.html">about</a>
+        <a href="essays.html">blog posts</a>
+        <a href="write.html" aria-current="page">studio</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- gate: connect / create password / unlock -->
+  <div class="st-gate" id="gate">
+    <div class="st-card">
+      <h1 id="gate-title">studio</h1>
+      <p id="gate-text">opening…</p>
+      <form id="gate-form" class="st-hidden" autocomplete="off">
+        <div id="connect-fields" class="st-hidden" style="display:grid;gap:10px">
+          <label class="sr" for="c-token">GitHub token</label>
+          <input class="st-field" id="c-token" type="password" placeholder="GitHub token (github_pat_…)" autocomplete="off" spellcheck="false">
+          <label class="sr" for="c-notes">Private notes repo</label>
+          <input class="st-field" id="c-notes" placeholder="private repo for notes, e.g. aliciachimeno/cuaderno" spellcheck="false">
+          <p class="st-small">Create a <a href="https://github.com/settings/personal-access-tokens/new" target="_blank" rel="noopener">fine-grained token</a> with access to <b>blog</b> and your private notes repo, permission <b>Contents: read and write</b>. It stays on this device only.</p>
+        </div>
+        <div id="pw-fields" class="st-hidden" style="display:grid;gap:10px">
+          <label class="sr" for="pw1">Password</label>
+          <input class="st-field" id="pw1" type="password" placeholder="password">
+          <label class="sr" for="pw2">Repeat password</label>
+          <input class="st-field" id="pw2" type="password" placeholder="repeat password">
+        </div>
+        <div class="st-err" id="gate-err" role="alert"></div>
+        <div class="st-row">
+          <button class="pill pill-dark" id="gate-btn" type="submit">open</button>
+          <button class="st-link" id="gate-alt" type="button"></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="st-app st-hidden" id="app">
+    <!-- library -->
+    <nav class="st-pane st-side" aria-label="Library">
+      <div class="st-scroll">
+        <div class="st-label">library</div>
+        <ul class="st-nav" id="nav-kinds"></ul>
+        <div class="st-label">topics <button id="add-topic" aria-label="New topic" title="New topic">+</button></div>
+        <div class="st-newtopic st-hidden" id="newtopic"><label class="sr" for="nt-input">Topic name</label><input id="nt-input" placeholder="topic name" maxlength="40"></div>
+        <ul class="st-nav" id="nav-topics"></ul>
+      </div>
+      <div class="st-foot">
+        <span id="sync">encrypted with your password</span>
+        <div class="st-row"><button id="lock">lock</button><button id="settings">connection</button></div>
+      </div>
+    </nav>
+
+    <!-- list -->
+    <section class="st-pane st-list" aria-label="Notes">
+      <div class="st-listhead">
+        <div class="st-titlebar">
+          <button class="st-icon st-back" id="back-side" aria-label="Library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <h2 id="list-name">everything</h2><span class="count" id="list-count"></span>
+        </div>
+        <div class="st-topictools st-hidden" id="topic-tools"></div>
+        <label class="sr" for="quick">Quick idea</label>
+        <input class="st-input st-quick" id="quick" placeholder="random idea? type it + enter" maxlength="600">
+        <label class="sr" for="q">Search</label>
+        <input class="st-input" id="q" type="search" placeholder="search">
+        <div class="st-actions">
+          <button class="pill pill-dark" id="new-essay">write new essay</button>
+          <button class="st-chip" id="new-note">+ note</button>
+          <button class="st-chip" id="new-quote">+ quote</button>
+        </div>
+      </div>
+      <ul class="st-notes" id="notes"></ul>
+    </section>
+
+    <!-- sheet -->
+    <section class="st-pane st-sheetpane" aria-label="Sheet">
+      <div class="st-blank" id="blank"><div><strong>pick something</strong>or write a new essay, jot an idea, save a quote</div></div>
+      <div id="editor" class="st-hidden" style="flex:1;min-height:0;display:flex;flex-direction:column">
+        <div class="st-bar">
+          <button class="st-icon st-back" id="back-list" aria-label="Back to list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+          <label class="sr" for="f-topic">Topic</label>
+          <select id="f-topic"></select>
+          <label class="sr" for="f-kind">Type</label>
+          <select id="f-kind"><option value="essay">essay draft</option><option value="note">note / idea</option><option value="quote">quote</option></select>
+          <span class="grow"></span>
+          <button class="st-icon" id="pin" aria-label="Pin" title="Pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4h6l-1 5 3 3H7l3-3z"/><path d="M12 12v8"/></svg></button>
+          <span id="del-zone"></span>
+        </div>
+        <div class="st-bar st-hidden" id="essay-bar">
+          <label class="sr" for="f-target">Publish to</label>
+          <select id="f-target"><option value="blog">public blog</option><option value="personal">personal section</option></select>
+          <button class="st-chip" id="preview-btn">preview</button>
+          <span class="grow"></span>
+          <span id="publish-zone"></span>
+        </div>
+        <div id="toast" class="st-toast st-hidden" role="status"></div>
+        <div class="st-sheet" id="sheet">
+          <div class="st-page" id="page-edit">
+            <div class="st-meta" id="meta"></div>
+            <label class="sr" for="f-title">Title</label>
+            <input id="f-title" placeholder="title" maxlength="200">
+            <label class="sr" for="f-quote">Quote</label>
+            <textarea id="f-quote" rows="2" placeholder="the sentence, exactly as you found it"></textarea>
+            <label class="sr" for="f-source">Source</label>
+            <input id="f-source" placeholder="— who said it, book, film, where you saw it" maxlength="200">
+            <label class="sr" for="f-body">Text</label>
+            <textarea id="f-body" placeholder="start writing…"></textarea>
+            <p class="st-hint st-hidden" id="md-hint">blank line = new paragraph · **bold** · *italic* · [link](https://…) · ## heading · &gt; quote · - list</p>
+          </div>
+          <div class="st-page st-hidden" id="page-preview"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<script>
+(() => {
+"use strict";
+const SITE = "https://aliciachimeno.github.io/blog/";
+const BLOG_REPO = "aliciachimeno/blog", BRANCH = "main";
+const NOTES_FILE = "cuaderno.json";
+const CFG_KEY = "studio.cfg", CACHE_KEY = "studio.cache";
+const $ = s => document.querySelector(s);
+const te = new TextEncoder(), td = new TextDecoder();
+
+let CFG = load(CFG_KEY);
+const S = { key:null, salt:null, check:null, book:null, sha:null, pending:null, remote:null,
+  sel:"all", openId:null, query:"", dirty:false, syncing:false, again:false, timer:null,
+  confirmDel:false, confirmPub:false, topicEdit:null, preview:false, publishing:false };
+
+/* ---------- small helpers ---------- */
+function load(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch{ return null; } }
+function store(k,v){ try{ v==null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); }catch{} }
+function show(el,on){ el.classList.toggle("st-hidden", !on); }
+function h(tag, attrs, ...kids){
+  const el=document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs||{})){
+    if (k==="class") el.className=v;
+    else if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else if (v===true) el.setAttribute(k,"");
+    else if (v!==false && v!=null) el.setAttribute(k,v);
+  }
+  for (const c of kids.flat()){ if (c==null||c===false) continue; el.append(c.nodeType?c:document.createTextNode(String(c))); }
+  return el;
+}
+const uid = p => p+"-"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+function words(s){ const m=(s||"").trim().match(/\S+/g); return m?m.length:0; }
+const fmtFull=new Intl.DateTimeFormat("en-GB",{day:"numeric",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit"});
+const fmtDay=new Intl.DateTimeFormat("en-GB",{day:"numeric",month:"short"});
+const fmtTime=new Intl.DateTimeFormat("en-GB",{hour:"2-digit",minute:"2-digit"});
+function when(t){ const d=new Date(t), n=new Date(); if (d.toDateString()===n.toDateString()) return fmtTime.format(d); const y=new Date(n); y.setDate(n.getDate()-1); if (d.toDateString()===y.toDateString()) return "yesterday"; return fmtDay.format(d); }
+
+/* ---------- crypto: PBKDF2 → AES-GCM ---------- */
+function b64(buf){ const b=new Uint8Array(buf); let s=""; for(let i=0;i<b.length;i+=0x8000) s+=String.fromCharCode.apply(null,b.subarray(i,i+0x8000)); return btoa(s); }
+function unb64(s){ const bin=atob(s.replace(/\s/g,"")); const u=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i); return u; }
+const toB64Utf8 = s => b64(te.encode(s));
+const fromB64Utf8 = s => td.decode(unb64(s));
+async function deriveKey(pw, salt){
+  const base=await crypto.subtle.importKey("raw", te.encode(pw), "PBKDF2", false, ["deriveKey"]);
+  return crypto.subtle.deriveKey({name:"PBKDF2", salt, iterations:250000, hash:"SHA-256"}, base, {name:"AES-GCM", length:256}, false, ["encrypt","decrypt"]);
+}
+async function seal(obj, key=S.key){ const iv=crypto.getRandomValues(new Uint8Array(12)); const ct=await crypto.subtle.encrypt({name:"AES-GCM", iv}, key, te.encode(JSON.stringify(obj))); return {iv:b64(iv), ct:b64(ct)}; }
+async function unseal(box, key=S.key){ const pt=await crypto.subtle.decrypt({name:"AES-GCM", iv:unb64(box.iv)}, key, unb64(box.ct)); return JSON.parse(td.decode(pt)); }
+
+/* ---------- GitHub API ---------- */
+async function gh(repo, path, opts={}){
+  const headers={ "Accept":"application/vnd.github+json", "X-GitHub-Api-Version":"2022-11-28", "Authorization":"Bearer "+CFG.token };
+  if (opts.body) headers["Content-Type"]="application/json";
+  return fetch("https://api.github.com/repos/"+repo+path, {cache:"no-store", ...opts, headers});
+}
+async function ghJSON(repo, path, opts){
+  const r=await gh(repo, path, opts);
+  if (!r.ok){ const e=new Error("GitHub "+r.status); e.status=r.status; try{ e.detail=(await r.json()).message; }catch{} throw e; }
+  return r.status===204 ? null : r.json();
+}
+async function ghText(repo, file, ref){
+  const j=await ghJSON(repo, "/contents/"+file+"?ref="+ref);
+  if (j.content) return fromB64Utf8(j.content);
+  const b=await ghJSON(repo, "/git/blobs/"+j.sha); return fromB64Utf8(b.content);
+}
+async function remoteLoad(){
+  const r=await gh(CFG.notes, "/contents/"+NOTES_FILE);
+  if (r.status===404) return null;
+  if (!r.ok){ const e=new Error("GitHub "+r.status); e.status=r.status; throw e; }
+  const j=await r.json(); let c=j.content;
+  if (!c){ c=(await ghJSON(CFG.notes, "/git/blobs/"+j.sha)).content; }
+  return { vault:JSON.parse(fromB64Utf8(c)), sha:j.sha };
+}
+async function remoteSave(vault, sha){
+  const body={ message:"notes "+new Date().toISOString().slice(0,16).replace("T"," "), content:toB64Utf8(JSON.stringify(vault)) };
+  if (sha) body.sha=sha;
+  const r=await gh(CFG.notes, "/contents/"+NOTES_FILE, {method:"PUT", body:JSON.stringify(body)});
+  if (r.status===409 || r.status===422){ const e=new Error("conflict"); e.conflict=true; throw e; }
+  if (!r.ok){ const e=new Error("GitHub "+r.status); e.status=r.status; throw e; }
+  return (await r.json()).content.sha;
+}
+
+/* ---------- gate ---------- */
+function gate(mode, title, text, err){
+  $("#gate-title").textContent=title; $("#gate-text").textContent=text;
+  const form=$("#gate-form"); form.dataset.mode=mode||""; show(form, !!mode);
+  show($("#connect-fields"), mode==="connect"); show($("#pw-fields"), mode==="setup"||mode==="unlock");
+  show($("#pw2"), mode==="setup");
+  $("#gate-btn").textContent = mode==="connect"?"connect":mode==="setup"?"create notebook":"open";
+  const alt=$("#gate-alt");
+  alt.textContent = mode==="unlock"||mode==="setup" ? "change connection" : (mode==="connect" && CFG ? "forget this device" : "");
+  show(alt, !!alt.textContent);
+  $("#gate-err").textContent=err||""; $("#pw1").value=""; $("#pw2").value="";
+  if (mode==="connect"){ $("#c-token").value=CFG?CFG.token:""; $("#c-notes").value=CFG?CFG.notes:"aliciachimeno/cuaderno"; }
+  show($("#gate"), true); show($("#app"), false);
+  setTimeout(()=>{ const f = mode==="connect" ? $("#c-token") : $("#pw1"); if (mode) f.focus(); }, 30);
+}
+$("#gate-alt").addEventListener("click", ()=>{
+  const mode=$("#gate-form").dataset.mode;
+  if (mode==="connect"){ CFG=null; store(CFG_KEY,null); store(CACHE_KEY,null); gate("connect","studio","This device is forgotten. Connect again to write here."); }
+  else gate("connect","connection","Your GitHub token and the private repo where notes are saved.");
+});
+
+$("#gate-form").addEventListener("submit", async e=>{
+  e.preventDefault();
+  const mode=e.currentTarget.dataset.mode, btn=$("#gate-btn"), err=$("#gate-err"); err.textContent="";
+  const label=btn.textContent; btn.disabled=true; btn.textContent="…";
+  try{
+    if (mode==="connect") await connect();
+    else if (mode==="setup") await setup();
+    else await unlock();
+  }catch(ex){ err.textContent = ex.userMessage || "Couldn't reach GitHub. Check your connection and try again."; }
+  btn.disabled=false; if (btn.textContent==="…") btn.textContent=label;
+});
+
+async function connect(){
+  const token=$("#c-token").value.trim(), notes=$("#c-notes").value.trim().replace(/^https:\/\/github\.com\//,"").replace(/\/$/,"");
+  const fail = m => { const x=new Error(m); x.userMessage=m; throw x; };
+  if (!token) fail("Paste your GitHub token.");
+  if (!/^[\w.-]+\/[\w.-]+$/.test(notes)) fail("Write the notes repo as user/name, e.g. aliciachimeno/cuaderno.");
+  const prev=CFG; CFG={token, notes};
+  try{
+    const blog=await ghJSON(BLOG_REPO, "");
+    if (blog.permissions && !blog.permissions.push) fail("This token can read the blog but can't publish. Give it Contents: read and write.");
+    const nrepo=await ghJSON(notes, "");
+    if (!nrepo.private) fail(notes+" is public. Make it private first so your notes stay out of sight.");
+  }catch(ex){
+    CFG=prev;
+    if (ex.userMessage) throw ex;
+    if (ex.status===401) fail("GitHub rejected this token. Check it was copied whole and hasn't expired.");
+    if (ex.status===404) fail("Can't see one of the repos. Make sure the token has access to blog and "+notes+".");
+    throw ex;
+  }
+  store(CFG_KEY, CFG); store(CACHE_KEY, null);
+  await openVault();
+}
+
+async function openVault(){
+  let rem=null, offline=false;
+  try{ rem=await remoteLoad(); }
+  catch(ex){ if (ex.status===401){ gate("connect","connection","","Your token stopped working. Paste a new one."); return; } offline=true; }
+  const cache=load(CACHE_KEY);
+  const v = rem ? rem.vault : (cache && cache.vault);
+  S.remote=rem; S.pending=v;
+  if (!v){
+    if (offline) gate(null,"studio","Can't reach GitHub right now. Check your connection and reload.");
+    else gate("setup","new notebook","Choose a password. Notes and drafts are encrypted with it before they leave this device, so even someone with access to the repo can't read them. If you forget it, they can't be recovered.");
+    return;
+  }
+  gate("unlock","studio", offline ? "Offline: opening the copy saved on this device." : "Write your password to open your notebook.");
+}
+
+async function setup(){
+  const pw=$("#pw1").value;
+  const fail = m => { const x=new Error(m); x.userMessage=m; throw x; };
+  if (pw.length<8) fail("Use at least 8 characters.");
+  if (pw!==$("#pw2").value) fail("The two passwords don't match.");
+  const salt=crypto.getRandomValues(new Uint8Array(16));
+  S.key=await deriveKey(pw, salt); S.salt=b64(salt); S.check=await seal({ok:"studio"});
+  S.book={ folders:[{id:"t-ai",name:"ai"},{id:"t-life",name:"life"},{id:"t-reading",name:"reading"}], foldersAt:Date.now(), notes:{}, deleted:{} };
+  S.sha=null; startApp(); markDirty(0);
+}
+
+async function unlock(){
+  const pw=$("#pw1").value, v=S.pending;
+  const key=await deriveKey(pw, unb64(v.salt));
+  let ok=false; try{ ok=(await unseal(v.check, key)).ok==="studio"; }catch{}
+  if (!ok){ const x=new Error(); x.userMessage="Wrong password."; $("#pw1").select(); throw x; }
+  S.key=key; S.salt=v.salt; S.check=v.check;
+  let book=await unseal(v.data);
+  const cache=load(CACHE_KEY);
+  S.sha = S.remote ? S.remote.sha : (cache && cache.sha) || null;
+  if (cache && cache.dirty && cache.vault && cache.vault.salt===v.salt && cache.vault!==v){
+    try{ book=merge(book, await unseal(cache.vault.data)); S.dirty=true; }catch{}
+  }
+  S.book=book; startApp();
+  if (S.dirty) markDirty(0); else cachePut(v, S.sha, false);
+}
+
+/* ---------- sync with the private repo ---------- */
+function merge(a, b){
+  const out={ folders: (a.foldersAt||0)>=(b.foldersAt||0) ? a.folders : b.folders,
+    foldersAt: Math.max(a.foldersAt||0, b.foldersAt||0), notes:{}, deleted:{...(b.deleted||{})} };
+  for (const [k,t] of Object.entries(a.deleted||{})) out.deleted[k]=Math.max(t, out.deleted[k]||0);
+  for (const src of [b,a]) for (const n of Object.values(src.notes||{})){ const cur=out.notes[n.id]; if (!cur || n.updatedAt>cur.updatedAt) out.notes[n.id]=n; }
+  for (const [id,t] of Object.entries(out.deleted)) if (out.notes[id] && out.notes[id].updatedAt<=t) delete out.notes[id];
+  return out;
+}
+function cachePut(vault, sha, dirty){ store(CACHE_KEY, {vault, sha, dirty}); }
+async function sealVault(){ return { v:1, salt:S.salt, check:S.check, data:await seal(S.book), at:Date.now() }; }
+function setSync(t){ $("#sync").textContent=t; }
+
+function markDirty(delay=2500){
+  S.dirty=true; setSync("saving…");
+  clearTimeout(S.timer); S.timer=setTimeout(sync, delay);
+}
+async function sync(){
+  if (!S.key) return;
+  if (S.syncing){ S.again=true; return; }
+  S.syncing=true; clearTimeout(S.timer);
+  try{
+    for (let attempt=0; attempt<4; attempt++){
+      S.dirty=false;
+      const vault=await sealVault(); cachePut(vault, S.sha, true);
+      try{ S.sha=await remoteSave(vault, S.sha); cachePut(vault, S.sha, false); setSync("saved · "+fmtTime.format(new Date())); break; }
+      catch(ex){ if (!ex.conflict) throw ex; S.dirty=true; await pullMerge(true); }
+    }
+  }catch(ex){
+    S.dirty=true;
+    if (ex.status===401) setSync("token expired. open “connection” to paste a new one");
+    else { setSync("offline · kept on this device"); clearTimeout(S.timer); S.timer=setTimeout(sync, 20000); }
+  }finally{
+    S.syncing=false;
+    if (S.again){ S.again=false; if (S.dirty) sync(); }
+  }
+}
+async function pullMerge(force){
+  const rem=await remoteLoad();
+  if (!rem){ S.sha=null; return; }
+  if (!force && rem.sha===S.sha) return;
+  if (rem.vault.salt!==S.salt) return;
+  const remoteBook=await unseal(rem.vault.data);
+  S.book=merge(S.book, remoteBook); S.sha=rem.sha;
+  if (!S.dirty) cachePut(rem.vault, rem.sha, false);
+  render();
+  if (S.openId && !$("#editor").contains(document.activeElement)) fillEditor();
+  if (S.openId && !S.book.notes[S.openId]) closeEditor();
+}
+async function refresh(){ if (!S.key || S.syncing) return; if (S.dirty){ sync(); return; } try{ await pullMerge(false); }catch{} }
+window.addEventListener("focus", refresh);
+document.addEventListener("visibilitychange", async ()=>{
+  if (!S.key) return;
+  if (document.hidden){ if (S.dirty){ cachePut(await sealVault(), S.sha, true); sync(); } }
+  else refresh();
+});
+window.addEventListener("online", ()=>{ if (S.dirty) sync(); });
+setInterval(()=>{ if (!document.hidden) refresh(); }, 120000);
+
+/* ---------- app ---------- */
+function startApp(){
+  show($("#gate"), false); show($("#app"), true); setView("list"); render();
+  const want=new URLSearchParams(location.search).get("new");
+  if (want){ history.replaceState(null,"",location.pathname); newItem(want==="quote"?"quote":want==="note"?"note":"essay"); }
+}
+$("#lock").onclick=async()=>{ if (S.dirty) await sync(); Object.assign(S,{key:null,book:null,openId:null}); closeEditor(); openVault(); };
+$("#settings").onclick=()=>gate("connect","connection","Your GitHub token and the private repo where notes are saved.");
+
+function setView(v){ document.body.classList.remove("v-side","v-list","v-sheet"); document.body.classList.add("v-"+v); }
+$("#back-side").onclick=()=>setView("side");
+$("#back-list").onclick=()=>{ maybeDropEmpty(S.openId); setView("list"); };
+document.querySelector(".nav-toggle").addEventListener("click",()=>document.querySelector(".primary-nav").classList.toggle("open"));
+
+const notes = () => Object.values(S.book.notes);
+const topicName = id => (S.book.folders.find(f=>f.id===id)||{}).name;
+const KINDS=[ {id:"all",name:"everything"}, {id:"essay",name:"essay drafts"}, {id:"note",name:"ideas & notes"}, {id:"quote",name:"quotes"}, {id:"published",name:"published"} ];
+
+function visible(){
+  const q=S.query.trim().toLowerCase();
+  return notes().filter(n=>{
+    if (S.sel==="published"){ if (!n.published) return false; }
+    else if (S.sel==="essay"||S.sel==="note"||S.sel==="quote"){ if (n.kind!==S.sel) return false; }
+    else if (S.sel==="loose"){ if (topicName(n.folder)) return false; }
+    else if (S.sel!=="all" && n.folder!==S.sel) return false;
+    if (q && !([n.title,n.body,n.quote,n.source].join(" ").toLowerCase().includes(q))) return false;
+    return true;
+  }).sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0) || b.updatedAt-a.updatedAt);
+}
+function render(){ if (!S.book) return; renderNav(); renderList(); }
+
+function navBtn(id, name, n){
+  return h("li",{}, h("button",{class:"st-navbtn","aria-current":String(S.sel===id), onclick:()=>{ S.sel=id; S.topicEdit=null; render(); setView("list"); }},
+    h("span",{class:"lbl"},name), h("span",{class:"n"},n)));
+}
+function renderNav(){
+  const all=notes();
+  const count={ all:all.length, essay:0, note:0, quote:0, published:0 };
+  for (const n of all){ count[n.kind]++; if (n.published) count.published++; }
+  $("#nav-kinds").replaceChildren(...KINDS.map(k=>navBtn(k.id, k.name, count[k.id])));
+  const topics=S.book.folders.map(f=>navBtn(f.id, f.name, all.filter(n=>n.folder===f.id).length));
+  const loose=all.filter(n=>!topicName(n.folder)).length;
+  if (loose) topics.push(navBtn("loose","no topic",loose));
+  $("#nav-topics").replaceChildren(...topics);
+}
+function selName(){ const k=KINDS.find(k=>k.id===S.sel); return k?k.name : S.sel==="loose"?"no topic" : (topicName(S.sel)||"topic"); }
+
+const firstLine = s => (s||"").trim().split("\n")[0].slice(0,90);
+function preview(n){ const b=(n.body||"").trim(); const rest = n.title ? b : b.split("\n").slice(1).join(" "); return rest.replace(/[#>*_\-\[\]]/g,"").replace(/\s+/g," ").slice(0,120); }
+
+function renderList(){
+  $("#list-name").textContent=selName();
+  const list=visible();
+  $("#list-count").textContent=list.length===1?"1 item":list.length+" items";
+  renderTopicTools();
+  if (!list.length){
+    const msg = S.query ? "nothing matches your search." :
+      S.sel==="essay" ? "no drafts yet. hit “write new essay”." :
+      S.sel==="quote" ? "no quotes yet. save the next sentence that stops you." :
+      S.sel==="published" ? "nothing published from here yet." :
+      "empty. type a random idea above and press enter.";
+    $("#notes").replaceChildren(h("li",{class:"st-empty"},msg)); return;
+  }
+  const out=[]; let label=null; const anyPinned=list.some(n=>n.pinned);
+  for (const n of list){
+    const lab = anyPinned ? (n.pinned?"pinned":"the rest") : null;
+    if (lab && lab!==label){ out.push(h("li",{class:"st-group"},lab)); label=lab; }
+    const head = n.kind==="quote" ? h("span",{class:"q"}, n.quote ? "“"+n.quote+"”" : "empty quote")
+                                  : h("span",{class:"t"}, n.title || firstLine(n.body) || (n.kind==="essay"?"untitled essay":"new note"));
+    const tag = n.published ? h("span",{class:"st-tag live"}, n.target==="personal"?"personal":"live")
+              : n.kind==="essay" ? h("span",{class:"st-tag"},"draft") : null;
+    const second = n.kind==="quote" ? (n.source ? "— "+n.source : "") : preview(n);
+    out.push(h("li",{}, h("button",{class:"st-item","aria-current":String(S.openId===n.id), onclick:()=>openNote(n.id)},
+      head, h("span",{class:"sub"}, h("span",{class:"when"},when(n.updatedAt)), tag, h("span",{class:"p"},second)))));
+  }
+  $("#notes").replaceChildren(...out);
+}
+
+function renderTopicTools(){
+  const box=$("#topic-tools"); const f=S.book.folders.find(x=>x.id===S.sel);
+  if (!f){ show(box,false); box.replaceChildren(); return; }
+  show(box,true);
+  if (S.topicEdit==="rename"){
+    const inp=h("input",{id:"rename-input",value:f.name,maxlength:"40","aria-label":"New topic name"});
+    const done=ok=>{ const v=inp.value.trim(); S.topicEdit=null; if (ok && v && v!==f.name){ f.name=v; S.book.foldersAt=Date.now(); markDirty(); } render(); };
+    inp.addEventListener("keydown",e=>{ if (e.key==="Enter") done(true); if (e.key==="Escape") done(false); });
+    box.replaceChildren(inp, h("button",{class:"st-link",onclick:()=>done(true)},"save"), h("button",{class:"st-link",onclick:()=>done(false)},"cancel"));
+    setTimeout(()=>{ inp.focus(); inp.select(); },0);
+  } else if (S.topicEdit==="delete"){
+    box.replaceChildren(h("span",{},"delete this topic? its notes move to “no topic”."),
+      h("button",{class:"st-link danger",onclick:()=>{
+        S.book.folders=S.book.folders.filter(x=>x.id!==f.id); S.book.foldersAt=Date.now();
+        for (const n of notes()) if (n.folder===f.id){ n.folder=""; n.updatedAt=Date.now(); }
+        S.sel="all"; S.topicEdit=null; markDirty(); render(); if (S.openId) fillEditor(); }},"delete"),
+      h("button",{class:"st-link",onclick:()=>{ S.topicEdit=null; renderTopicTools(); }},"cancel"));
+  } else {
+    box.replaceChildren(h("button",{class:"st-link",onclick:()=>{ S.topicEdit="rename"; renderTopicTools(); }},"rename topic"),
+      h("button",{class:"st-link danger",onclick:()=>{ S.topicEdit="delete"; renderTopicTools(); }},"delete topic"));
+  }
+}
+
+$("#add-topic").onclick=()=>{ const b=$("#newtopic"); const open=b.classList.contains("st-hidden"); show(b,open); if (open){ $("#nt-input").value=""; $("#nt-input").focus(); } };
+$("#nt-input").addEventListener("keydown",e=>{
+  if (e.key==="Escape"){ show($("#newtopic"),false); return; }
+  if (e.key!=="Enter") return;
+  const v=e.target.value.trim(); if (!v) return;
+  const f={id:uid("t"),name:v}; S.book.folders.push(f); S.book.foldersAt=Date.now();
+  show($("#newtopic"),false); S.sel=f.id; markDirty(); render();
+});
+$("#q").addEventListener("input",e=>{ S.query=e.target.value; renderList(); });
+$("#quick").addEventListener("keydown",e=>{
+  if (e.key!=="Enter") return;
+  const v=e.target.value.trim(); if (!v) return;
+  const n=blank("note"); n.body=v; if (S.book.folders.some(f=>f.id===S.sel)) n.folder=S.sel;
+  S.book.notes[n.id]=n; e.target.value=""; markDirty(); render();
+});
+
+/* ---------- notes ---------- */
+function blank(kind){ const t=Date.now(); return {id:uid("n"), kind, title:"", body:"", quote:"", source:"", folder:"", pinned:false, target:"blog", published:null, createdAt:t, updatedAt:t}; }
+function newItem(kind){
+  const n=blank(kind);
+  if (S.book.folders.some(f=>f.id===S.sel)) n.folder=S.sel;
+  else if (S.sel!=="all" && S.sel!==kind) S.sel = kind;
+  S.book.notes[n.id]=n; S.query=""; $("#q").value="";
+  openNote(n.id, true);
+}
+$("#new-essay").onclick=()=>newItem("essay");
+$("#new-note").onclick=()=>newItem("note");
+$("#new-quote").onclick=()=>newItem("quote");
+
+function touch(n){ n.updatedAt=Date.now(); markDirty(); }
+function openNote(id, focus){
+  if (S.openId && S.openId!==id) maybeDropEmpty(S.openId);
+  S.openId=id; S.confirmDel=false; S.confirmPub=false; S.preview=false;
+  show($("#blank"),false); show($("#editor"),true); show($("#toast"),false);
+  fillEditor(); render(); setView("sheet"); $("#sheet").scrollTop=0;
+  if (focus){ const n=S.book.notes[id]; setTimeout(()=>(n.kind==="quote"?$("#f-quote"):$("#f-title")).focus(),30); }
+}
+function maybeDropEmpty(id){
+  const n=id && S.book && S.book.notes[id]; if (!n || n.published) return;
+  if (![n.title,n.body,n.quote,n.source].some(x=>(x||"").trim())){ delete S.book.notes[id]; if (S.openId===id) closeEditor(); render(); }
+}
+function closeEditor(){ S.openId=null; show($("#editor"),false); show($("#blank"),true); }
+
+function fillEditor(){
+  const n=S.book.notes[S.openId]; if (!n){ closeEditor(); return; }
+  const isQ=n.kind==="quote", isE=n.kind==="essay";
+  show($("#f-title"),!isQ); show($("#f-quote"),isQ); show($("#f-source"),isQ); show($("#md-hint"),isE); show($("#essay-bar"),isE);
+  setVal("#f-title",n.title); setVal("#f-quote",n.quote); setVal("#f-source",n.source); setVal("#f-body",n.body);
+  $("#f-title").placeholder = isE ? "essay title" : "title (optional)";
+  $("#f-body").placeholder = isQ ? "why it stayed with you…" : isE ? "start writing…" : "the idea…";
+  $("#f-topic").replaceChildren(h("option",{value:""},"no topic"), ...S.book.folders.map(f=>h("option",{value:f.id},f.name)));
+  $("#f-topic").value = topicName(n.folder) ? n.folder : "";
+  $("#f-kind").value=n.kind; $("#f-kind").disabled=!!n.published;
+  $("#f-target").value=n.target||"blog"; $("#f-target").disabled=!!n.published;
+  $("#pin").classList.toggle("on",!!n.pinned); $("#pin").setAttribute("aria-pressed",String(!!n.pinned));
+  show($("#page-edit"),!S.preview); show($("#page-preview"),S.preview);
+  $("#preview-btn").textContent = S.preview ? "edit" : "preview";
+  if (S.preview) renderPreview(n);
+  renderDel(); renderPublish(); meta(); grow($("#f-body")); grow($("#f-quote"));
+}
+function setVal(sel,v){ const el=$(sel); if (el.value!==(v||"")) el.value=v||""; }
+function meta(){
+  const n=S.book.notes[S.openId]; if (!n) return;
+  const w=words(n.title)+words(n.body)+words(n.quote);
+  let t=fmtFull.format(new Date(n.updatedAt))+" · "+w+(w===1?" word":" words");
+  if (w>150) t+=" · "+Math.max(1,Math.round(w/230))+" min read";
+  if (n.published) t+=" · published "+fmtDay.format(new Date(n.published.date));
+  $("#meta").textContent=t;
+}
+function grow(el){ if (el.classList.contains("st-hidden")) return; el.style.height="auto"; el.style.height=el.scrollHeight+"px"; }
+
+function bind(sel, field){
+  $(sel).addEventListener("input", e=>{
+    const n=S.book.notes[S.openId]; if (!n) return;
+    n[field]=e.target.value; touch(n); meta(); if (e.target.tagName==="TEXTAREA") grow(e.target);
+    if (n.published) renderPublish();
+    renderList(); renderNav();
+  });
+}
+bind("#f-title","title"); bind("#f-body","body"); bind("#f-quote","quote"); bind("#f-source","source");
+$("#f-topic").addEventListener("change",e=>{ const n=S.book.notes[S.openId]; n.folder=e.target.value; touch(n); render(); });
+$("#f-kind").addEventListener("change",e=>{ const n=S.book.notes[S.openId]; n.kind=e.target.value; touch(n); fillEditor(); render(); });
+$("#f-target").addEventListener("change",e=>{ const n=S.book.notes[S.openId]; n.target=e.target.value; touch(n); renderPublish(); });
+$("#pin").onclick=()=>{ const n=S.book.notes[S.openId]; n.pinned=!n.pinned; touch(n); fillEditor(); render(); };
+$("#preview-btn").onclick=()=>{ S.preview=!S.preview; fillEditor(); };
+window.addEventListener("resize",()=>{ grow($("#f-body")); grow($("#f-quote")); });
+
+function renderDel(){
+  const z=$("#del-zone"), n=S.book.notes[S.openId];
+  if (S.confirmDel){
+    z.replaceChildren(h("span",{class:"st-confirm"}, n.published ? "delete the draft? (the published essay stays online)" : "delete this?",
+      h("button",{class:"st-link danger",onclick:()=>{ delete S.book.notes[S.openId]; S.book.deleted[S.openId]=Date.now(); markDirty(); closeEditor(); setView("list"); render(); }},"delete"),
+      h("button",{class:"st-link",onclick:()=>{ S.confirmDel=false; renderDel(); }},"cancel")));
+  } else {
+    z.replaceChildren(h("button",{class:"st-icon","aria-label":"Delete",title:"Delete",onclick:()=>{ S.confirmDel=true; renderDel(); }},
+      svg("M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13")));
+  }
+}
+function svg(d){ const NS="http://www.w3.org/2000/svg"; const s=document.createElementNS(NS,"svg"); s.setAttribute("viewBox","0 0 24 24"); s.setAttribute("fill","none"); s.setAttribute("stroke","currentColor"); s.setAttribute("stroke-width","2"); s.setAttribute("stroke-linecap","round"); s.setAttribute("stroke-linejoin","round"); const p=document.createElementNS(NS,"path"); p.setAttribute("d",d); s.append(p); return s; }
+
+/* ---------- markdown-ish → blog HTML ---------- */
+function inline(s){
+  let x=esc(s);
+  x=x.replace(/`([^`]+)`/g,"<code>$1</code>");
+  x=x.replace(/\[([^\]]+)\]\(((?:https?:\/\/|mailto:|\.\.\/|\/)[^\s)]+)\)/g,(m,t,u)=>'<a href="'+u+'"'+(/^https?:/.test(u)?' target="_blank" rel="noopener"':"")+">"+t+"</a>");
+  x=x.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+  x=x.replace(/(^|[^*\w])\*([^*\n]+)\*(?!\w)/g,"$1<em>$2</em>");
+  x=x.replace(/(^|[^\w])_([^_\n]+)_(?!\w)/g,"$1<em>$2</em>");
+  return x;
+}
+function md(src){
+  const blocks=(src||"").replace(/\r/g,"").split(/\n\s*\n/).map(b=>b.replace(/^\n+|\s+$/g,"")).filter(Boolean);
+  return blocks.map(b=>{
+    const lines=b.split("\n");
+    let m;
+    if ((m=b.match(/^(#{2,3})\s+(.+)$/)) && lines.length===1) return "  <h"+m[1].length+">"+inline(m[2])+"</h"+m[1].length+">";
+    if (lines.every(l=>/^\s*[-*]\s+/.test(l))) return "  <ul>\n"+lines.map(l=>"    <li>"+inline(l.replace(/^\s*[-*]\s+/,""))+"</li>").join("\n")+"\n  </ul>";
+    if (lines.every(l=>/^>\s?/.test(l))) return "  <blockquote>\n    <p>"+lines.map(l=>inline(l.replace(/^>\s?/,""))).join("<br>\n    ")+"</p>\n  </blockquote>";
+    return "  <p>\n    "+lines.map(inline).join("<br>\n    ")+"\n  </p>";
+  }).join("\n\n");
+}
+const longDate = d => new Date(d).toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+function renderPreview(n){
+  const p=$("#page-preview");
+  p.innerHTML='<div class="essay-page st-preview"><div class="essay-header h1"><div class="post-date"></div><h1></h1></div><article class="essay-content"></article></div>';
+  p.querySelector(".post-date").textContent=longDate(n.published?n.published.date:Date.now());
+  p.querySelector("h1").textContent=n.title||"untitled essay";
+  p.querySelector("article").innerHTML=md(n.body);
+}
+
+function essayPage(n, date){
+  const personal=n.target==="personal";
+  const back=personal?["../personal.html","&larr; back to personal blog"]:["../essays.html","&larr; back to blog"];
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>alicia's blog - ${esc(n.title)}</title>
+<link rel="stylesheet" href="../style.css">
+<link rel="icon" href="../assets/globe_icon_pink_1024.png" sizes="any">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container">
+    <a class="brand" href="../index.html">
+  <img class="brand-logo" src="../assets/acs-logo.png" alt="" onerror="this.style.display='none'">
+</a>
+    <div class="header-right">
+      <nav class="primary-nav">
+        <a href="../about.html">about</a>
+        <a href="../essays.html"${personal?"":' aria-current="page"'}>blog posts</a>
+      </nav>
+      <button class="nav-toggle" aria-label="Toggle menu">☰</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="page-section container essay-page">
+
+    <a href="${back[0]}" class="back-link">${back[1]}</a>
+
+    <div class="essay-header h1">
+      <div class="post-date">${longDate(date)}</div>
+      <h1>${esc(n.title)}</h1>
+    </div>
+
+ <article class="essay-content">
+${md(n.body)}
+</article>
+
+  </section>
+</main>
+
+<footer class="site-footer-dark">
+  <div class="container footer-top-bar">
+    <a href="mailto:aliciachimeno9@gmail.com">aliciachimeno9@gmail.com</a>
+    <span>© <span class="footer-year"></span></span>
+  </div>
+
+  <div class="container footer-main">
+    <div class="footer-cta">
+      <p class="footer-tagline">alicia xxx</p>
+    </div>
+    <div class="footer-columns">
+      <div class="footer-col-dark">
+        <h4>Social</h4>
+<a href="https://www.linkedin.com/in/alicia-chimeno-sarabia" target="_blank" rel="noopener">linkedin</a>
+        <a href="https://x.com/aliciachimeno">x</a>
+      </div>
+      <div class="footer-col-dark">
+        <h4>Sections</h4>
+        <a href="../about.html">about me</a>
+        <a href="${personal?"../personal.html\">personal":"../essays.html\">essays"}</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container footer-bottom-dark">
+    <span>© <span class="footer-year"></span> Alícia Chimeno | Barcelona</span>
+  </div>
+</footer>
+
+<script>document.querySelectorAll(".footer-year").forEach(el => el.textContent = new Date().getFullYear());<\/script>
+<script src="../script.js"><\/script>
+</body>
+</html>
+`;
+}
+
+function addToList(html, n, path, date){
+  const d=new Date(date), year=d.getFullYear(), dm=d.getDate()+"/"+(d.getMonth()+1);
+  const star = n.target==="personal" ? '\n            <span class="post-star">★</span>' : "";
+  const item=`          <div class="post-item">${star}\n            <span class="post-title"><a href="${path}">${esc(n.title)}</a></span>\n            <span class="post-date">${dm}</span>\n          </div>\n`;
+  const m=html.match(/<h2 class="year-heading">(\d{4})<\/h2>\s*<div class="post-list">[ \t]*\r?\n/);
+  if (m && +m[1]===year){ const i=m.index+m[0].length; return html.slice(0,i)+item+html.slice(i); }
+  const g=html.indexOf('<div class="post-year-group">');
+  if (g<0){ const e=new Error("list"); e.userMessage="Couldn't find the post list in the page. Nothing was published."; throw e; }
+  const group=`<div class="post-year-group">\n        <h2 class="year-heading">${year}</h2>\n        <div class="post-list">\n${item}        </div>\n      </div>\n      `;
+  return html.slice(0,g)+group+html.slice(g);
+}
+function renameInList(html, path, title){
+  const re=new RegExp('(<a href="'+path.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")+'">)([\\s\\S]*?)(</a>)');
+  return html.replace(re, (m,a,_,c)=>a+esc(title)+c);
+}
+
+/* ---------- publishing to the blog repo (one commit) ---------- */
+function renderPublish(){
+  const z=$("#publish-zone"), n=S.book.notes[S.openId]; if (!n || n.kind!=="essay"){ z.replaceChildren(); return; }
+  const where = n.target==="personal" ? "the personal section" : "your public blog";
+  if (S.publishing){ z.replaceChildren(h("button",{class:"st-publish",disabled:true},"publishing…")); return; }
+  if (S.confirmPub){
+    z.replaceChildren(h("span",{class:"st-confirm"}, n.published ? "update the live essay?" : "publish to "+where+"?",
+      h("button",{class:"st-publish",onclick:()=>publish(n)}, n.published?"update":"publish"),
+      h("button",{class:"st-link",onclick:()=>{ S.confirmPub=false; renderPublish(); }},"cancel")));
+    return;
+  }
+  const changed = n.published && n.updatedAt>n.published.at;
+  if (n.published && !changed){ z.replaceChildren(h("a",{class:"st-link",href:SITE+n.published.path,target:"_blank",rel:"noopener"},"view live ↗")); return; }
+  z.replaceChildren(h("button",{class:"st-publish",onclick:()=>{
+    if (!n.title.trim() || !n.body.trim()){ toast("Give it a title and some text before publishing."); return; }
+    S.confirmPub=true; renderPublish(); }}, n.published ? "update live essay" : "publish ✦"));
+}
+function toast(msg, link){
+  const t=$("#toast"); t.replaceChildren(h("span",{},msg));
+  if (link) t.append(h("a",{href:link,target:"_blank",rel:"noopener"},"open it ↗"));
+  t.append(h("button",{class:"st-link",onclick:()=>show(t,false)},"close"));
+  show(t,true);
+}
+async function publish(n){
+  S.confirmPub=false; S.publishing=true; renderPublish();
+  try{
+    const ref=await ghJSON(BLOG_REPO, "/git/ref/heads/"+BRANCH); const head=ref.object.sha;
+    const commit=await ghJSON(BLOG_REPO, "/git/commits/"+head);
+    const listFile = n.target==="personal" ? "personal.html" : "essays.html";
+    let listHtml=await ghText(BLOG_REPO, listFile, head);
+    const files=[]; let path, date;
+    if (n.published){
+      path=n.published.path; date=n.published.date;
+      const renamed=renameInList(listHtml, path, n.title);
+      if (renamed!==listHtml) files.push({path:listFile, content:renamed});
+    } else {
+      const dir=await ghJSON(BLOG_REPO, "/contents/essays?ref="+head);
+      const prefix = n.target==="personal" ? "personal" : "essay";
+      let max=0; for (const f of dir){ const m=f.name.match(new RegExp("^"+prefix+"(\\d+)\\.html$")); if (m) max=Math.max(max,+m[1]); }
+      path="essays/"+prefix+(max+1)+".html"; date=Date.now();
+      files.push({path:listFile, content:addToList(listHtml, n, path, date)});
+    }
+    files.push({path, content:essayPage(n, date)});
+    const tree=await ghJSON(BLOG_REPO, "/git/trees", {method:"POST", body:JSON.stringify({ base_tree:commit.tree.sha,
+      tree:files.map(f=>({path:f.path, mode:"100644", type:"blob", content:f.content})) })});
+    const c=await ghJSON(BLOG_REPO, "/git/commits", {method:"POST", body:JSON.stringify({ message:(n.published?"update essay: ":"new essay: ")+n.title, tree:tree.sha, parents:[head] })});
+    await ghJSON(BLOG_REPO, "/git/refs/heads/"+BRANCH, {method:"PATCH", body:JSON.stringify({sha:c.sha})});
+    n.published={path, date, at:Date.now()+1}; n.updatedAt=Date.now(); markDirty(0);
+    toast(n.target==="personal" ? "Published to your personal section. It goes live in about a minute." : "Published! It goes live on your blog in about a minute.", SITE+path);
+  }catch(ex){
+    toast(ex.userMessage || (ex.status===401||ex.status===403 ? "GitHub refused the publish. Check the token has Contents: read and write on blog." :
+      ex.status===422 || ex.status===409 ? "The blog changed while publishing. Try again." : "Couldn't publish: no connection to GitHub. Your draft is safe."));
+  }
+  S.publishing=false; fillEditor(); render();
+}
+
+/* ---------- boot ---------- */
+if (!window.crypto || !crypto.subtle){ gate(null,"studio","This browser can't encrypt notes. Open the page over https in an up-to-date browser."); return; }
+if (!CFG) gate("connect","studio","Connect this device once with your GitHub token. After that, you only need your password.");
+else openVault();
+})();
+</script>
+</body>
+</html>

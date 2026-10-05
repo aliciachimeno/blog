@@ -1034,3 +1034,48 @@ a {
   25% { transform: translateX(-5px); }
   75% { transform: translateX(5px); }
 }
+
+/* ---------- "write new essay" button (essays.html / personal.html) ---------- */
+.write-cta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 8px 0 28px;
+}
+.write-cta[hidden] { display: none; }
+.write-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 22px 12px 18px;
+  border-radius: 999px;
+  background: #111;
+  color: #fff;
+  font-family: "Fraunces", Georgia, serif;
+  font-style: italic;
+  font-weight: 600;
+  font-size: 18px;
+  text-decoration: none;
+  overflow: hidden;
+  transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), box-shadow 0.25s;
+}
+.write-pill::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(255,95,162,0.55) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform 0.7s ease;
+}
+.write-pill:hover { transform: translateY(-2px) rotate(-1.5deg); box-shadow: 0 10px 24px -10px rgba(255,95,162,0.9); }
+.write-pill:hover::before { transform: translateX(120%); }
+.write-pill:active { transform: scale(0.96); }
+.write-star { display: inline-block; color: #ff5fa2; transition: transform 0.6s cubic-bezier(.34,1.56,.64,1); }
+.write-pill:hover .write-star { transform: rotate(180deg) scale(1.3); }
+.write-sub { font-size: 14px; color: var(--color-muted); text-decoration: underline; text-underline-offset: 3px; }
+.write-sub:hover { color: var(--color-text); }
+@media (prefers-reduced-motion: reduce) {
+  .write-pill, .write-pill::before, .write-star { transition: none; }
+}
